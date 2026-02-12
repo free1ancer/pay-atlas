@@ -9,7 +9,7 @@ type SalaryEntry = {
   title: string
   total_compensation: number | null
   years_of_experience: number | null
-  company: { name: string } | null
+  company: { name: string }[] | null
   function: string | null
 }
 
@@ -44,7 +44,7 @@ export default function Explore() {
       }
 
       const { data } = await query
-      setEntries(data || [])
+      setEntries((data as SalaryEntry[]) || [])
       setLoading(false)
     }
 
@@ -57,7 +57,7 @@ export default function Explore() {
       x: e.years_of_experience,
       y: e.total_compensation,
       title: e.title,
-      company: e.company?.name || 'Unknown',
+      company: e.company?.[0]?.name || 'Unknown',
     }))
 
   const formatCurrency = (value: number) => 
@@ -155,7 +155,7 @@ export default function Explore() {
           <tbody className="divide-y divide-gray-100">
             {entries.slice(0, 20).map((entry) => (
               <tr key={entry.id} className="hover:bg-gray-50">
-                <td className="px-6 py-4 text-sm">{entry.company?.name || '—'}</td>
+                <td className="px-6 py-4 text-sm">{entry.company?.[0]?.name || '—'}</td>
                 <td className="px-6 py-4 text-sm font-medium">{entry.title}</td>
                 <td className="px-6 py-4 text-sm text-gray-500 capitalize">{entry.function || '—'}</td>
                 <td className="px-6 py-4 text-sm text-right">{entry.years_of_experience || '—'}</td>
